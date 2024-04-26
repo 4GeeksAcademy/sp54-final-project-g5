@@ -18,3 +18,16 @@ class Users(db.Model):
         return {'id': self.id,
                 'email': self.email,
                 'is_active': self.is_active}
+
+class Admins(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer,db.ForeignKey('users.id'))
+    name = db.Column(db.String(120), unique=True, nullable=False)
+
+    def __repr__(self):
+        return f'<Admin {self.name}>'
+
+    def serialize(self):
+        return {'id': self.id,
+                'user_id': self.user_id,
+                'name': self.name}    
