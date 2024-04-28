@@ -94,7 +94,7 @@ class Travels(db.Model):
     days = db.Column(db.Integer)
     price = db.Column(db.Integer)
     description = db.Column(db.String(500), nullable=False)
-    place_id = db.Column(db.String(120), db.ForeignKey('places_id'))
+    place_id = db.Column(db.String(120), db.ForeignKey('places.id'))
     img_url = db.Column(db.String)
     itinerary = db.Column(db.String)
 
@@ -110,3 +110,41 @@ class Travels(db.Model):
                 'place_id': self.place_id,
                 'img_url': self.img_url,
                 'itinerary': self.itinerary}    
+
+
+class Departures(db.Model):    
+    id = db.Column(db.Integer, primary_key=True)
+    travel_id = db.Column(db.Integer, db.ForeignKey('travels.id'))
+    dates = db.Column(db.Integer)
+    coordinator_name = db.Column(db.String)
+    coordinator_img = db.Column(db.String)
+
+    def __repr__(self):
+        return f'<Departures {self.id}>'
+
+    def serialize(self):
+        return {'id': self.id,
+                'travel_id': self.travel_id,
+                'dates': self.dates,
+                'coordinator_name': self.coordinator_name,
+                'coordinator_img': self.coordinator_img}
+
+
+class ShoppingCart(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    departure_id = db.Column(db.Integer, db.ForeignKey('departures.id'))   
+    customer_id = db.Column(db.Integer, db.ForeignKey('customers.id'))
+    payment = db.Column(db.Integer)
+    price = db.Column(db.Integer)
+    passengers = db.Column(db.Integer)
+
+    def __repr__(self):
+        return f'<ShoppingCart {self.id}>'
+
+    def serialize(self):
+        return {'id': self.id,
+                'departure_id': self.departure_id,
+                'customer_id': self.customer_id,
+                'payment': self.payment,
+                'price': self.price,
+                'passengers': self.passengers}                    
