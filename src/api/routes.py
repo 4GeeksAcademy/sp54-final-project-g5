@@ -4,7 +4,7 @@ This module takes care of starting the API Server, Loading the DB and Adding the
 from flask import Flask, request, jsonify, url_for, Blueprint
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
-from api.models import db, Users
+from api.models import db, Users, Admins, Customers, Films, Places, Travels, Departures, ShoppingCart
 
 
 api = Blueprint('api', __name__)
@@ -16,3 +16,15 @@ def handle_hello():
     response_body = {}
     response_body['message'] = "Hello! I'm a message that came from the backend"
     return response_body, 200
+
+@api.route('/register', methods=['GET'])
+def handle_register():
+    response_body = {}
+    response_body['message'] = "Hello! You are registered"
+    return response_body, 200    
+
+@api.route('/login', methods=['GET'])
+def handle_login():
+    response_body = {}
+    response_body['message'] = "Login!!"
+    return response_body, 200        
