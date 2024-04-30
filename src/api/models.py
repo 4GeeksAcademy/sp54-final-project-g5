@@ -1,4 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy.orm import relationship
 
 
 db = SQLAlchemy()
@@ -31,6 +33,10 @@ class Admins(db.Model):
         return {'id': self.id,
                 'user_id': self.user_id,
                 'name': self.name}  
+
+    def serialize_public(self):
+        return {'admin_name': self.name}  
+
 
 class Customers(db.Model):
     id = db.Column(db.Integer, primary_key=True)
