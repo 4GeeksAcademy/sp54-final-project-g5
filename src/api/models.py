@@ -21,6 +21,9 @@ class Users(db.Model):
                 'email': self.email,
                 'is_active': self.is_active}
 
+    def serialize_public(self):
+        return {'user_email': self.email}        
+
 class Admins(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer,db.ForeignKey('users.id'))
@@ -57,7 +60,14 @@ class Customers(db.Model):
                 'address': self.address,
                 'phone': self.phone,
                 'id_type': self.id_type,
-                'id_number': self.id_number}   
+                'id_number': self.id_number} 
+
+    def serialize_public(self):
+        return {'customer_name': self.name,
+                'customer_address': self.address,
+                'customer_phone': self.phone,
+                'customer_id_type': self.id_type,
+                'customer_id_number': self.id_number}              
 
 
 class Films(db.Model):
@@ -75,6 +85,11 @@ class Films(db.Model):
                 'director': self.director,
                 'description': self.description}   
 
+    def serialize_public(self):
+        return {'film_name': self.name,
+                'director': self.director,
+                'film_description': self.description}            
+
 
 class Places(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -91,7 +106,12 @@ class Places(db.Model):
                 'title': self.title,
                 'film_id': self.film_id,
                 'country': self.country,
-                'img_url': self.img_url}                       
+                'img_url': self.img_url}   
+
+    def serialize_public(self):
+        return {'title': self.title,
+                'country': self.country,
+                'place_img_url': self.img_url}                                
 
 
 class Travels(db.Model):
@@ -117,6 +137,14 @@ class Travels(db.Model):
                 'img_url': self.img_url,
                 'itinerary': self.itinerary}    
 
+    def serialize_public(self):
+        return {'travel_name': self.name,
+                'days': self.days,
+                'price': self.price,
+                'travel_description': self.description,
+                'travel_img_url': self.img_url,
+                'itinerary': self.itinerary}
+                                
 
 class Departures(db.Model):    
     id = db.Column(db.Integer, primary_key=True)
@@ -134,6 +162,12 @@ class Departures(db.Model):
                 'dates': self.dates,
                 'coordinator_name': self.coordinator_name,
                 'coordinator_img': self.coordinator_img}
+
+    def serialize_public(self):
+        return {'dates': self.dates,
+                'coordinator_name': self.coordinator_name,
+                'coordinator_img': self.coordinator_img}
+                            
 
 
 class ShoppingCart(db.Model):
@@ -153,4 +187,10 @@ class ShoppingCart(db.Model):
                 'customer_id': self.customer_id,
                 'payment': self.payment,
                 'price': self.price,
-                'passengers': self.passengers}                    
+                'passengers': self.passengers} 
+
+    def serialize_public(self):
+        return {'payment': self.payment,
+                'price': self.price,
+                'passengers': self.passengers}
+                                                   
