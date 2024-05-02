@@ -28,6 +28,7 @@ class Admins(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer,db.ForeignKey('users.id'))
     name = db.Column(db.String(120), unique=True, nullable=False)
+    is_active = db.Column(db.Boolean(), unique=False, nullable=False)
 
     def __repr__(self):
         return f'<Admin {self.id} name: {self.name}>'
@@ -35,7 +36,9 @@ class Admins(db.Model):
     def serialize(self):
         return {'id': self.id,
                 'user_id': self.user_id,
-                'name': self.name}  
+                'name': self.name,
+                'is_active': self.is_active}   
+                  
 
     def serialize_public(self):
         return {'admin_name': self.name}  
@@ -46,7 +49,8 @@ class Customers(db.Model):
     user_id = db.Column(db.Integer,db.ForeignKey('users.id'))  
     name = db.Column(db.String(120), unique=True, nullable=False)   
     address = db.Column(db.String(300), nullable=False)
-    phone = db.Column(db.Integer)   
+    phone = db.Column(db.Integer)
+    is_active = db.Column(db.Boolean(), unique=False, nullable=False)   
     id_type = db.Column(db.Integer)
     id_number = db.Column(db.Integer)    
 
@@ -59,6 +63,7 @@ class Customers(db.Model):
                 'name': self.name,
                 'address': self.address,
                 'phone': self.phone,
+                'is_active': self.is_active,   
                 'id_type': self.id_type,
                 'id_number': self.id_number} 
 
