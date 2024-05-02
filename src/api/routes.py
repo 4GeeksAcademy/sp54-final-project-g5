@@ -197,7 +197,7 @@ def handle_admin_id(admin_id):
 
 @api.route('/departures', methods=['GET'])
 
-@api.route('/shopping-cart', methos= ['GET', 'POST'])
+@api.route('/shopping-cart', methods= ['GET', 'POST'])
 
 # @api.route('/payment')
 
