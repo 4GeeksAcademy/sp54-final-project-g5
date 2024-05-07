@@ -175,7 +175,7 @@ class Departures(db.Model):
                             
 
 
-class ShoppingCart(db.Model):
+class Carts(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     departure_id = db.Column(db.Integer, db.ForeignKey('departures.id'))   
     customer_id = db.Column(db.Integer, db.ForeignKey('customers.id'))

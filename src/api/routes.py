@@ -4,8 +4,8 @@ This module takes care of starting the API Server, Loading the DB and Adding the
 from flask import Flask, request, jsonify, url_for, Blueprint
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
-from api.models import db, Users, Admins, Customers, Films, Places, Travels, Departures, ShoppingCart
-# from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity, unset_jwt_cookies, set_access_cookies
+from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity, unset_jwt_cookies, set_access_cookies
+from api.models import db, Users, Admins, Customers, Films, Places, Travels, Departures, Carts
 from sqlalchemy import func 
 from flask_jwt_extended import jwt_required
 
@@ -48,10 +48,10 @@ def handle_login():
         results['admin'] = admin.serialize()
         customer = db.session.execute(db.select(Customers).where(Customers.user_id == user.id)).scalar()
         results['customer'] = customer.serialize() if customer else None
-    access_token = create_access_token(identity=[user.id,
-                                                 user.is_admin,
-                                                 admin.id if results['admin'] else None,
-                                                 customer.id if results['customer'] else None])                                              
+    access_token = create_access_token(identity={user_id: user.id,
+                                                 user_admin: user.is_admin,
+                                                 admin_id: admin.id if results['admin'] else None,
+                                                 customer_id: customer.id if results['customer'] else None})                                              
     response_body = {'message': 'Token created',
                      'token': access_token,
                      'results': results}
@@ -286,50 +286,45 @@ def handle_departures():
     return response_body, 200 
 
 
-@api.route('/shoppingcart', methods= ['GET'])
+@api.route('/carts', methods= ['GET', 'POST'])
 @jwt_required()
-def handle_shoppingcart():
+def handle_carts():
     identity = get_jwt_identity()
-    if request.method == 'GET' and identity[1]:
-        carts = db.session.execute(db.select(ShoppingCart)).scalars()
+    if request.method == 'GET':
+        carts = db.session.execute(db.select(Carts)).scalars()
         cart_list = [cart.serialize() for cart in carts]
-        response_body = {'message': 'ShoppingCart',
+        response_body = {'message': 'Carts',
                          'results': cart_list}
         return response_body, 200 
-
-@api.route('/shoppingcart', methods= ['POST']) 
-@jwt_required()
-def handle_shoppingcart():
-    identity = get_jwt_identity()
     if request.method == 'POST' and member_id:
-        cart = db.session.execute(db.select(ShoppingCarts).where(ShoppingCarts.member_id == member_id)).scalar()
+        cart = db.session.execute(db.select(Carts).where(Carts.member_id == member_id)).scalar()
         results = {}
         if not cart:
             # Verificamos si ya tiene un carrito
-            cart = ShoppingCart(price=
-                                departure_id = 
-                                customer_id = 
-                                payment = 
-                                passengers =)
-            db.session.add(shoppingcart)
+            cart = Carts(price = 22,
+                                departure_id = 1, 
+                                customer_id = 2,
+                                payment = 12,
+                                passengers = 1)
+            db.session.add(cart)
             db.session.commit()
         data = request.get_json()
-        cart_item = ShoppingCart (price=data['price'],
+        cart_item = Carts (price=data['price'],
                                   departure_id = data ['departures.id'],
                                   customer_id = data['customers.id'],
                                   payment = data ['payment'],
                                   passengers = data ['passengers'])
-        db.session.add(shoppingcart)
+        db.session.add(cart_item)
         db.session.commit()
         # Actualizamos el total del carrito
         cart['payment'] += cart_item['price'] * cart_item['passengers']
         db.session.commit()
         results['shopping_cart'] = cart.serialize()
-        cart_items = db.session.execute(db.select(ShoppingCart)).scalars()
+        cart_items = db.session.execute(db.select(Carts)).scalars()
         list_items = []
         for item in cart_items:
             list_items.append(item.serialize())
-        results['shoppingcart'] = list_items
+        results['carts'] = list_items
         response_body = {'message': 'Shopping Cart with all items', 
                          'results': results}
         return response_body, 201 
