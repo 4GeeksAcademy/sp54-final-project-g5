@@ -232,8 +232,21 @@ def handle_places():
 
 @api.route('/films', methods=['GET'])
 def handle_films():
-    # Implementa la lógica para obtener las películas y devolverlas como respuesta
-    return jsonify({'message': 'Films endpoint'})
+    # Trae films de la DB
+    films = Films.query.all()
+
+    serialized_films = []
+    for film in films:
+        serialized_place = {
+            'id': film.id,
+            'name': film.name,
+            'director':film.director,
+            'description': film.description
+        }
+        serialized_films.append(serialized_film)
+
+    # Devuelve listado de films.
+    return jsonify({'films': serialized_films}), 200
 
 @api.route('/departures', methods=['GET'])
 def handle_departures():
