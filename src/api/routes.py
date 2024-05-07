@@ -191,7 +191,7 @@ def handle_admin_id(admin_id):
 
 @api.route('/travels', methods=['GET'])
 def handle_travels():
-    # Obtiene los viajes de la base de datos
+    # Obtiene los travels de la DB
     travels = Travels.query.all()
 
     serialized_travels = []
@@ -213,8 +213,22 @@ def handle_travels():
 
 @api.route('/places', methods=['GET'])
 def handle_places():
-    # Implementa la lógica para obtener los lugares y devolverlos como respuesta
-    return jsonify({'message': 'Places endpoint'})
+    # Trae places de la DB
+    places = Places.query.all()
+
+    serialized_places = []
+    for place in places:
+        serialized_place = {
+            'id': place.id,
+            'title': place.title,
+            'film_id': place.film_id,
+            'country':place.country,
+            'img_url': place.img_url
+        }
+        serialized_places.append(serialized_place)
+
+    # Devuelve listado de places.
+    return jsonify({'places': serialized_places}), 200
 
 @api.route('/films', methods=['GET'])
 def handle_films():
