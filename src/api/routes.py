@@ -17,7 +17,7 @@ def handle_hello():
     response_body['message'] = "Hello! I'm a message that came from the backend"
     return response_body, 200
 
-@api.route('/register', methods=['GET'])
+@api.route('/register', methods=['POST'])
 def handle_register():
     response_body = {}
     response_body['message'] = "Hello! You are registered"
@@ -190,14 +190,51 @@ def handle_admin_id(admin_id):
         return response_body, 200
 
 @api.route('/travels', methods=['GET'])
+def handle_travels():
+    # Obtiene los viajes de la base de datos
+    travels = Travels.query.all()
+
+    serialized_travels = []
+    for travel in travels:
+        serialized_travel = {
+            'id': travel.id,
+            'name': travel.name,
+            'days': travel.days,
+            'price': travel.price,
+            'description': travel.description,
+            'place_id': travel.place_id,
+            'img_url': travel.img_url,
+            'itinerary': travel.itinerary
+        }
+        serialized_travels.append(serialized_travel)
+
+    # Devuelve el listado de travels.
+    return jsonify({'travels': serialized_travels}), 200
 
 @api.route('/places', methods=['GET'])
+def handle_places():
+    # Implementa la lógica para obtener los lugares y devolverlos como respuesta
+    return jsonify({'message': 'Places endpoint'})
 
 @api.route('/films', methods=['GET'])
+def handle_films():
+    # Implementa la lógica para obtener las películas y devolverlas como respuesta
+    return jsonify({'message': 'Films endpoint'})
 
 @api.route('/departures', methods=['GET'])
+def handle_departures():
+    # Implementa la lógica para obtener las salidas y devolverlas como respuesta
+    return jsonify({'message': 'Departures endpoint'})
 
 @api.route('/shopping-cart', methods= ['GET', 'POST'])
+def handle_shopping_cart():
+    if request.method == 'GET':
+        # Implementa la lógica para obtener el carrito de compras y devolverlo como respuesta
+        return jsonify({'message': 'Shopping Cart GET endpoint'})
+    elif request.method == 'POST':
+        # Implementa la lógica para agregar elementos al carrito de compras
+        # Aquí puedes acceder a los datos del carrito desde request.json
+        return jsonify({'message': 'Shopping Cart POST endpoint'})
 
 # @api.route('/payment')
 
