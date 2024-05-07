@@ -258,98 +258,10 @@ def handle_admin_id(admin_id):
         return response_body, 200
 
 @api.route('/travels', methods=['GET'])
-def handle_travels():
-    # Obtiene los travels de la DB
-    travels = Travels.query.all()
-
-    serialized_travels = []
-    for travel in travels:
-        serialized_travel = {
-            'id': travel.id,
-            'name': travel.name,
-            'days': travel.days,
-            'price': travel.price,
-            'description': travel.description,
-            'place_id': travel.place_id,
-            'img_url': travel.img_url,
-            'itinerary': travel.itinerary
-        }
-        serialized_travels.append(serialized_travel)
-
-    # Devuelve el listado de travels.
-    return jsonify({'travels': serialized_travels}), 200
-
-@api.route('/places', methods=['GET'])
-def handle_places():
-    # Trae places de la DB
-    places = Places.query.all()
-
-    serialized_places = []
-    for place in places:
-        serialized_place = {
-            'id': place.id,
-            'title': place.title,
-            'film_id': place.film_id,
-            'country':place.country,
-            'img_url': place.img_url
-        }
-        serialized_places.append(serialized_place)
-
-    # Devuelve listado de places.
-    return jsonify({'places': serialized_places}), 200
-
-@api.route('/films', methods=['GET'])
-def handle_films():
-    # Trae films de la DB
-    films = Films.query.all()
-
-    serialized_films = []
-    for film in films:
-        serialized_place = {
-            'id': film.id,
-            'name': film.name,
-            'director':film.director,
-            'description': film.description
-        }
-        serialized_films.append(serialized_film)
-
-    # Devuelve listado de films.
-    return jsonify({'films': serialized_films}), 200
-
-@api.route('/departures', methods=['GET'])
-def handle_departures():
-    # Trae departures de la DB
-    departures = Departures.query.all()
-
-    # Serializa las departures
-    serialized_departures = []
-    for departure in departures:
-        serialized_departure = {
-            'id': departure.id,
-            'travel_id': departure.travel_id,
-            'dates': departure.dates,
-            'coordinator_name': departure.coordinator_name,
-            'coordinator_img': departure.coordinator_img,
-        }
-        serialized_departures.append(serialized_departure)
-
-    # Listado de departures
-    return jsonify({'departures': serialized_departures}), 200
-
-
-@api.route('/shopping-cart', methods= ['GET', 'POST'])
-def handle_shopping_cart():
-    if request.method == 'GET':
-        # Implementa la lógica para obtener el carrito de compras y devolverlo como respuesta
-        return jsonify({'message': 'Shopping Cart GET endpoint'})
-    elif request.method == 'POST':
-        # Implementa la lógica para agregar elementos al carrito de compras
-        # Aquí puedes acceder a los datos del carrito desde request.json
-        return jsonify({'message': 'Shopping Cart POST endpoint'})
-=======
+def handle_travels(): 
     travels = db.session.execute(db.select(Travels)).scalars()
     response_body = {'message': 'Travels', 
-                     'results': Travels}
+                      'results': Travels}
     return response_body, 200 
 
 @api.route('/places', methods=['GET'])
@@ -358,7 +270,6 @@ def handle_places():
     response_body = {'message': 'Places', 
                       'results': Places}
     return response_body, 200 
-
 
 @api.route('/films', methods=['GET'])
 def handle_films(): 
@@ -373,6 +284,7 @@ def handle_departures():
     response_body = {'message': 'Departures', 
                      'results': Departures}
     return response_body, 200 
+
 
 @api.route('/shoppingcart', methods= ['GET'])
 @jwt_required()
@@ -409,7 +321,7 @@ def handle_shoppingcart():
                                   passengers = data ['passengers'])
         db.session.add(shoppingcart)
         db.session.commit()
-        # Actualizamos el monto total del carrito
+        # Actualizamos el total del carrito
         cart['payment'] += cart_item['price'] * cart_item['passengers']
         db.session.commit()
         results['shopping_cart'] = cart.serialize()
