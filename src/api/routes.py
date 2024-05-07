@@ -250,8 +250,24 @@ def handle_films():
 
 @api.route('/departures', methods=['GET'])
 def handle_departures():
-    # Implementa la lógica para obtener las salidas y devolverlas como respuesta
-    return jsonify({'message': 'Departures endpoint'})
+    # Trae departures de la DB
+    departures = Departures.query.all()
+
+    # Serializa las departures
+    serialized_departures = []
+    for departure in departures:
+        serialized_departure = {
+            'id': departure.id,
+            'travel_id': departure.travel_id,
+            'dates': departure.dates,
+            'coordinator_name': departure.coordinator_name,
+            'coordinator_img': departure.coordinator_img,
+        }
+        serialized_departures.append(serialized_departure)
+
+    # Listado de departures
+    return jsonify({'departures': serialized_departures}), 200
+
 
 @api.route('/shopping-cart', methods= ['GET', 'POST'])
 def handle_shopping_cart():
