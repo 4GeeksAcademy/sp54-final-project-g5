@@ -29,6 +29,7 @@ class Admins(db.Model):
     user_id = db.Column(db.Integer,db.ForeignKey('users.id'))
     name = db.Column(db.String(120), unique=True, nullable=False)
     is_active = db.Column(db.Boolean(), unique=False, nullable=False)
+    user = db.relationship('Users', foreign_keys=[user_id])
 
     def __repr__(self):
         return f'<Admin {self.id} name: {self.name}>'
@@ -52,7 +53,8 @@ class Customers(db.Model):
     phone = db.Column(db.Integer)
     is_active = db.Column(db.Boolean(), unique=False, nullable=False)   
     id_type = db.Column(db.Integer)
-    id_number = db.Column(db.Integer)    
+    id_number = db.Column(db.Integer)   
+    user = db.relationship('Users', foreign_keys=[user_id]) 
 
     def __repr__(self):
         return f'<Customers {self.id} name: {self.name}>'
@@ -101,7 +103,8 @@ class Places(db.Model):
     title = db.Column(db.String(120), nullable=False)
     film_id = db.Column(db.String(120), db.ForeignKey('films.id'))
     country = db.Column(db.String(120), nullable=False)
-    img_url = db.Column(db.String(120))  
+    img_url = db.Column(db.String(120)) 
+    film = db.relationship('Films', foreign_keys=[film_id]) 
 
     def __repr__(self):
         return f'Places {self.id} country: {self.country}>'
@@ -128,6 +131,7 @@ class Travels(db.Model):
     place_id = db.Column(db.String(120), db.ForeignKey('places.id'))
     img_url = db.Column(db.String)
     itinerary = db.Column(db.String)
+    place = db.relationship('Places', foreign_keys=[place_id])
 
     def __repr__(self):
         return f'<Travels {self.id} name: {self.name}>'
@@ -157,6 +161,7 @@ class Departures(db.Model):
     dates = db.Column(db.Integer)
     coordinator_name = db.Column(db.String)
     coordinator_img = db.Column(db.String)
+    travel = db.relationship('Travels', foreign_keys=[travel_id])
 
     def __repr__(self):
         return f'<Departures {self.id}>'
@@ -176,12 +181,15 @@ class Departures(db.Model):
 
 
 class Carts(db.Model):
+    __tablename__="carts"
     id = db.Column(db.Integer, primary_key=True)
     departure_id = db.Column(db.Integer, db.ForeignKey('departures.id'))   
     customer_id = db.Column(db.Integer, db.ForeignKey('customers.id'))
     payment = db.Column(db.Integer)
     price = db.Column(db.Integer)
     passengers = db.Column(db.Integer)
+    departures = db.relationship('Departures', foreign_keys=[departure_id])
+    customer = db.relationship('Customer', foreign_keys=[customer_id])
 
     def __repr__(self):
         return f'<ShoppingCart {self.id}>'

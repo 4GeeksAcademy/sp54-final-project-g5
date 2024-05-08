@@ -286,7 +286,7 @@ def handle_departures():
     return response_body, 200 
 
 
-@api.route('/carts', methods= ['GET', 'POST'])
+@api.route('/carts', methods= ['GET', 'POST', 'DELETE'])
 @jwt_required()
 def handle_carts():
     identity = get_jwt_identity()
@@ -328,8 +328,16 @@ def handle_carts():
         response_body = {'message': 'Shopping Cart with all items', 
                          'results': results}
         return response_body, 201 
+        response_body = {'message': "Restricted access"}
+        return response_body, 401
+    if request.method == 'DELETE':
+        # Eliminar el carrito
+        db.session.query(Carts).delete()
+        db.session.commit()
+        response_body = {'message': 'Cart deleted successfully'}
+        return response_body, 200
     response_body = {'message': "Restricted access"}
     return response_body, 401
 
-# @api.route('/payment')
+
 
